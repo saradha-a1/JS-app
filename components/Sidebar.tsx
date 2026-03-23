@@ -4,7 +4,7 @@ import { useState } from 'react';
 import {
   Home, FileText, ClipboardList, Users, ShoppingCart,
   Receipt, KeyRound, Settings, ChevronDown, ChevronRight,
-  Archive, Map, Building2, UserCog, PanelLeftClose, PanelLeftOpen,
+  Archive, Map, Building2, UserCog, PanelLeftClose, PanelLeftOpen, X,
 } from 'lucide-react';
 
 const NAV_ITEMS = [
@@ -24,7 +24,15 @@ const MASTER_ITEMS_ALL = [
   { id: '/cities',        label: 'City',          icon: Building2, iconBg: '#FDF2F8', iconColor: '#DB2777', adminOnly: false },
 ];
 
-export default function Sidebar({ userRole }: { userRole: string }) {
+export default function Sidebar({
+  userRole,
+  mobileOpen,
+  onClose,
+}: {
+  userRole: string;
+  mobileOpen?: boolean;
+  onClose?: () => void;
+}) {
   const pathname = usePathname();
   const router = useRouter();
   const [masterOpen, setMasterOpen] = useState(false);
@@ -36,30 +44,52 @@ export default function Sidebar({ userRole }: { userRole: string }) {
   const isActive = (path: string) => pathname === path || pathname.startsWith(path + '/');
   const isMasterActive = MASTER_ITEMS.some(i => isActive(i.id));
 
-  return (
+  const navigate = (path: string) => {
+    router.push(path);
+    onClose?.();
+  };
+
+  const sidebarContent = (isMobile: boolean) => (
     <div
-      className="flex flex-col h-screen flex-shrink-0 transition-all duration-300 overflow-hidden"
-      style={{ width: collapsed ? 64 : 248, background: '#FFFFFF', borderRight: '1px solid #E5E7EB' }}
+      className="flex flex-col h-full"
+      style={{ background: '#FFFFFF', width: isMobile ? 260 : collapsed ? 64 : 248 }}
     >
       {/* Brand */}
       <div className="flex items-center h-[64px] flex-shrink-0 px-3 gap-3" style={{ borderBottom: '1px solid #F3F4F6' }}>
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="flex items-center justify-center w-9 h-9 rounded-xl hover:bg-[#F5F7FB] transition-colors flex-shrink-0 text-[#6B7280]"
-          title="Toggle sidebar"
-        >
-          {collapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
-        </button>
-        {!collapsed && (
-          <div>
-            <div className="text-sm font-bold text-[#1F2937] leading-tight">JS Packers</div>
-            <div className="text-xs text-[#9CA3AF]">& Movers ERP</div>
-          </div>
+        {isMobile ? (
+          <>
+            <div className="flex-1">
+              <div className="text-sm font-bold text-[#1F2937] leading-tight">JS Packers</div>
+              <div className="text-xs text-[#9CA3AF]">& Movers ERP</div>
+            </div>
+            <button
+              onClick={onClose}
+              className="flex items-center justify-center w-9 h-9 rounded-xl hover:bg-[#F5F7FB] text-[#6B7280]"
+            >
+              <X size={18} />
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              onClick={() => setCollapsed(!collapsed)}
+              className="flex items-center justify-center w-9 h-9 rounded-xl hover:bg-[#F5F7FB] transition-colors flex-shrink-0 text-[#6B7280]"
+              title="Toggle sidebar"
+            >
+              {collapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
+            </button>
+            {!collapsed && (
+              <div>
+                <div className="text-sm font-bold text-[#1F2937] leading-tight">JS Packers</div>
+                <div className="text-xs text-[#9CA3AF]">& Movers ERP</div>
+              </div>
+            )}
+          </>
         )}
       </div>
 
       {/* Role badge */}
-      {!collapsed && (
+      {(!collapsed || isMobile) && (
         <div className="px-3 pt-2.5 pb-1">
           <span
             className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
@@ -81,12 +111,12 @@ export default function Sidebar({ userRole }: { userRole: string }) {
           return (
             <button
               key={item.id}
-              onClick={() => router.push(item.id)}
-              title={collapsed ? item.label : undefined}
+              onClick={() => navigate(item.id)}
+              title={(!isMobile && collapsed) ? item.label : undefined}
               className={`w-full flex items-center gap-3 rounded-xl transition-all text-sm font-medium ${
                 active ? 'bg-[#4F6BED] text-white shadow-sm' : 'text-[#6B7280] hover:bg-[#F5F7FB] hover:text-[#1F2937]'
               }`}
-              style={{ padding: collapsed ? '8px 10px' : '8px 12px' }}
+              style={{ padding: (!isMobile && collapsed) ? '8px 10px' : '8px 12px' }}
             >
               <span
                 className="flex items-center justify-center w-7 h-7 rounded-lg flex-shrink-0"
@@ -94,7 +124,7 @@ export default function Sidebar({ userRole }: { userRole: string }) {
               >
                 <Icon size={15} style={{ color: active ? '#ffffff' : item.iconColor }} />
               </span>
-              {!collapsed && <span className="truncate text-left">{item.label}</span>}
+              {(isMobile || !collapsed) && <span className="truncate text-left">{item.label}</span>}
             </button>
           );
         })}
@@ -102,12 +132,12 @@ export default function Sidebar({ userRole }: { userRole: string }) {
         {/* Master Section */}
         <div>
           <button
-            onClick={() => { if (!collapsed) setMasterOpen(!masterOpen); }}
-            title={collapsed ? 'Master' : undefined}
+            onClick={() => { if (isMobile || !collapsed) setMasterOpen(!masterOpen); }}
+            title={(!isMobile && collapsed) ? 'Master' : undefined}
             className={`w-full flex items-center gap-3 rounded-xl transition-all text-sm font-medium ${
               isMasterActive ? 'bg-[#4F6BED] text-white shadow-sm' : 'text-[#6B7280] hover:bg-[#F5F7FB] hover:text-[#1F2937]'
             }`}
-            style={{ padding: collapsed ? '8px 10px' : '8px 12px' }}
+            style={{ padding: (!isMobile && collapsed) ? '8px 10px' : '8px 12px' }}
           >
             <span
               className="flex items-center justify-center w-7 h-7 rounded-lg flex-shrink-0"
@@ -115,7 +145,7 @@ export default function Sidebar({ userRole }: { userRole: string }) {
             >
               <Settings size={15} style={{ color: isMasterActive ? '#ffffff' : '#64748B' }} />
             </span>
-            {!collapsed && (
+            {(isMobile || !collapsed) && (
               <>
                 <span className="flex-1 text-left truncate">Master</span>
                 {masterOpen
@@ -126,7 +156,7 @@ export default function Sidebar({ userRole }: { userRole: string }) {
             )}
           </button>
 
-          {masterOpen && !collapsed && (
+          {masterOpen && (isMobile || !collapsed) && (
             <div className="mt-0.5 ml-3 space-y-0.5 pl-2" style={{ borderLeft: '2px solid #E5E7EB' }}>
               {MASTER_ITEMS.map(item => {
                 const Icon = item.icon;
@@ -134,7 +164,7 @@ export default function Sidebar({ userRole }: { userRole: string }) {
                 return (
                   <button
                     key={item.id}
-                    onClick={() => router.push(item.id)}
+                    onClick={() => navigate(item.id)}
                     className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl transition-all text-sm font-medium ${
                       active ? 'bg-[#4F6BED] text-white shadow-sm' : 'text-[#6B7280] hover:bg-[#F5F7FB] hover:text-[#1F2937]'
                     }`}
@@ -155,11 +185,38 @@ export default function Sidebar({ userRole }: { userRole: string }) {
       </nav>
 
       {/* Footer */}
-      {!collapsed && (
+      {(isMobile || !collapsed) && (
         <div className="px-4 py-3 text-[10px] text-[#9CA3AF]" style={{ borderTop: '1px solid #F3F4F6' }}>
           v1.0.0 &copy; 2025 JS Packers
         </div>
       )}
     </div>
+  );
+
+  return (
+    <>
+      {/* Desktop sidebar */}
+      <div
+        className="hidden md:flex flex-col h-screen flex-shrink-0 transition-all duration-300 overflow-hidden"
+        style={{ width: collapsed ? 64 : 248, borderRight: '1px solid #E5E7EB' }}
+      >
+        {sidebarContent(false)}
+      </div>
+
+      {/* Mobile drawer overlay */}
+      {mobileOpen && (
+        <div className="md:hidden fixed inset-0 z-50 flex">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/40"
+            onClick={onClose}
+          />
+          {/* Drawer */}
+          <div className="relative z-10 flex flex-col h-full shadow-2xl" style={{ borderRight: '1px solid #E5E7EB' }}>
+            {sidebarContent(true)}
+          </div>
+        </div>
+      )}
+    </>
   );
 }

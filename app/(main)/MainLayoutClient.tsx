@@ -1,11 +1,13 @@
 'use client';
 import { useRouter, usePathname } from 'next/navigation';
-import { LogOut } from 'lucide-react';
+import { useState } from 'react';
+import { LogOut, Menu } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
 
 export default function MainLayoutClient({ children, userName, userRole }: { children: React.ReactNode; userName: string; userRole: string }) {
   const router = useRouter();
   const pathname = usePathname();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const getPageTitle = () => {
     if (pathname === '/' || pathname === '/dashboard') return 'Dashboard';
@@ -32,18 +34,27 @@ export default function MainLayoutClient({ children, userName, userRole }: { chi
 
   return (
     <div className="min-h-screen flex" style={{ background: '#F5F7FB' }}>
-      <Sidebar userRole={userRole} />
-      <div className="flex-1 flex flex-col h-screen overflow-hidden">
+      <Sidebar userRole={userRole} mobileOpen={mobileOpen} onClose={() => setMobileOpen(false)} />
+
+      <div className="flex-1 flex flex-col h-screen overflow-hidden min-w-0">
         {/* Top header */}
         <header
-          className="flex items-center justify-between px-6 flex-shrink-0"
+          className="flex items-center justify-between px-4 md:px-6 flex-shrink-0 gap-3"
           style={{ height: 64, background: '#FFFFFF', borderBottom: '1px solid #E5E7EB' }}
         >
-          <div>
-            <h1 className="text-lg font-semibold text-[#1F2937]">{getPageTitle()}</h1>
+          <div className="flex items-center gap-3 min-w-0">
+            {/* Hamburger — mobile only */}
+            <button
+              className="md:hidden flex items-center justify-center w-9 h-9 rounded-xl hover:bg-[#F5F7FB] text-[#6B7280] flex-shrink-0"
+              onClick={() => setMobileOpen(true)}
+            >
+              <Menu size={20} />
+            </button>
+            <h1 className="text-base md:text-lg font-semibold text-[#1F2937] truncate">{getPageTitle()}</h1>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2.5">
+
+          <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
+            <div className="flex items-center gap-2">
               <div
                 className="flex items-center justify-center rounded-xl text-white text-xs font-bold flex-shrink-0"
                 style={{ width: 36, height: 36, background: userRole === 'admin' ? '#4F6BED' : '#059669' }}
@@ -57,7 +68,7 @@ export default function MainLayoutClient({ children, userName, userRole }: { chi
             </div>
             <button
               onClick={handleLogout}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-colors text-[#6B7280] hover:bg-red-50 hover:text-red-600 border border-gray-200 hover:border-red-200"
+              className="flex items-center gap-1.5 px-2.5 md:px-3 py-2 rounded-xl text-sm font-medium transition-colors text-[#6B7280] hover:bg-red-50 hover:text-red-600 border border-gray-200 hover:border-red-200"
             >
               <LogOut size={14} />
               <span className="hidden sm:inline">Logout</span>
@@ -66,7 +77,7 @@ export default function MainLayoutClient({ children, userName, userRole }: { chi
         </header>
 
         {/* Content area */}
-        <main className="flex-1 overflow-auto p-6">
+        <main className="flex-1 overflow-auto p-4 md:p-6">
           {children}
         </main>
       </div>
