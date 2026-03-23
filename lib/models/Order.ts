@@ -21,6 +21,7 @@ export interface IOrder extends Document {
   other_charges: number;
   final_amount: number;
   status: string;
+  created_by: string;
   createdAt: Date;
 }
 

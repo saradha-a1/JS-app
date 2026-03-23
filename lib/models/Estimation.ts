@@ -9,6 +9,7 @@ export interface IEstimation extends Document {
   to_location: string;
   items: object[];
   total_amount: number;
+  created_by: string;
   createdAt: Date;
 }
 

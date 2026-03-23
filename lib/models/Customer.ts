@@ -8,6 +8,7 @@ export interface ICustomer extends Document {
   contact: string;
   gstin: string;
   billing_address: string;
+  created_by: string;
   createdAt: Date;
 }
 

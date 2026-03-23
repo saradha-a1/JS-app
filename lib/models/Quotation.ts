@@ -12,6 +12,7 @@ export interface IQuotation extends Document {
   total_basic: number;
   total_tax: number;
   grand_total: number;
+  created_by: string;
   createdAt: Date;
 }
 

@@ -16,6 +16,7 @@ export interface IReceipt extends Document {
   particulars: string;
   total_amount: number;
   grand_total: number;
+  created_by: string;
   createdAt: Date;
 }
 

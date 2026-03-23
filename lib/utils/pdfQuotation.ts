@@ -186,7 +186,7 @@ export const generateQuotationPDF = async (data: QuotationPDFData, action: 'view
     startY: y + 10,
     head: [['S.No', 'Description', 'Qty', 'Rate', 'Amount']],
     body: data.items.map((item, i) => {
-      const bg = i % 2 === 0 ? [255, 255, 255] : ALT_ROW;
+      const bg: [number, number, number] = i % 2 === 0 ? [255, 255, 255] : ALT_ROW;
       return [
         { content: i + 1, styles: { halign: 'center', fillColor: bg } },
         { content: item.description, styles: { fillColor: bg } },
