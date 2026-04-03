@@ -199,7 +199,7 @@ export const generateQuotationPDF = async (data: QuotationPDFData, action: 'view
     headStyles: { fillColor: RED, textColor: [255, 255, 255], fontStyle: 'bold', fontSize: 8.5, lineColor: [255, 255, 255] },
     styles: { fontSize: 8.5, cellPadding: 3 },
     columnStyles: { 0: { halign: 'center', cellWidth: 14 }, 2: { halign: 'center', cellWidth: 18 }, 3: { halign: 'right', cellWidth: 30 }, 4: { halign: 'right', cellWidth: 35, fontStyle: 'bold' } },
-    margin: { left: m, right: m },
+    margin: { top: 67, left: m, right: m },
     didDrawPage: (hookData) => {
       if (hookData.pageNumber > 1) {
         drawHeader(doc, pw, ph, m, data.id, data.date, logoImg);

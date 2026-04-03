@@ -188,7 +188,7 @@ export const generateEstimationPDF = async (data: EstimationPDFData, action: 'vi
     theme: 'grid',
     styles: { fontSize: 8.5, cellPadding: 3.5, lineColor: [200, 200, 200], lineWidth: 0.3 },
     headStyles: { fontSize: 9, lineColor: [255, 255, 255] },
-    margin: { left: m, right: m },
+    margin: { top: 67, left: m, right: m },
     didDrawPage: () => { drawWatermark(doc, pw, ph, wmImg); },
   });
 
@@ -204,7 +204,7 @@ export const generateEstimationPDF = async (data: EstimationPDFData, action: 'vi
       0: { halign: 'center', cellWidth: 14 },
       2: { halign: 'center', cellWidth: 18 },
     },
-    margin: { left: m, right: m },
+    margin: { top: 67, left: m, right: m },
     didDrawPage: (hookData) => {
       if (hookData.pageNumber > 1) {
         drawHeader(doc, pw, ph, m, 'Estimation', data.id, data.date, logoImg);

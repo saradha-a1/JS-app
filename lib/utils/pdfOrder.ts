@@ -229,7 +229,7 @@ export const generateOrderPDF = async (data: OrderPDFData, action: 'view' | 'sav
     theme: 'grid',
     styles: { fontSize: 8, cellPadding: 3, lineColor: [255, 255, 255], lineWidth: 0.3 },
     columnStyles: { 0: { cellWidth: 32 }, 1: { cellWidth: 59 }, 2: { cellWidth: 32 }, 3: { cellWidth: 59 } },
-    margin: { left: m, right: m },
+    margin: { top: 67, left: m, right: m },
     didDrawPage: (hookData) => {
       if (hookData.pageNumber > 1) {
         drawHeader(doc); drawCompanyInfo(doc); drawFooter(doc); drawWatermark(doc);
@@ -414,7 +414,7 @@ export const generateOrderPDF = async (data: OrderPDFData, action: 'view' | 'sav
       8: { cellWidth: 16, halign: 'right' },
       9: { cellWidth: 20, halign: 'right' },
     },
-    margin: { left: m, right: m },
+    margin: { top: 67, left: m, right: m },
     didDrawPage: (hookData) => {
       if (hookData.pageNumber > 1) {
         drawHeader(doc); drawCompanyInfo(doc); drawFooter(doc);
